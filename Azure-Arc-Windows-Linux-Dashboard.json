@@ -1,0 +1,218 @@
+{
+  "properties": {
+    "lenses": {
+      "0": {
+        "order": 0,
+        "parts": {
+          "0": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "colSpan": 11,
+              "rowSpan": 5
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "partTitle",
+                  "value": "Azure-Arc-Overview",
+                  "isOptional": true
+                },
+                {
+                  "name": "query",
+                  "value": " resources\r\n| where type == \"microsoft.hybridcompute/machines\"\r\n| extend agentversion = properties.agentVersion\r\n| project name, agentversion, location, resourceGroup, subscriptionId\r\n| order by name",
+                  "isOptional": true
+                },
+                {
+                  "name": "chartType",
+                  "isOptional": true
+                },
+                {
+                  "name": "formatResults",
+                  "value": true,
+                  "isOptional": true
+                },
+                {
+                  "name": "queryScope",
+                  "value": {
+                    "scope": 0,
+                    "values": []
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "isShared",
+                  "isOptional": true
+                },
+                {
+                  "name": "queryId",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/ArgQueryGridTile",
+              "settings": {}
+            }
+          },
+          "1": {
+            "position": {
+              "x": 11,
+              "y": 0,
+              "colSpan": 8,
+              "rowSpan": 5
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "partTitle",
+                  "value": "Windows ESU Assignment Status",
+                  "isOptional": true
+                },
+                {
+                  "name": "query",
+                  "value": "resources\r\n| where type=~ 'microsoft.hybridcompute/machines'\r\n| extend esuEligibility = properties.licenseProfile.esuProfile.esuEligibility\r\n| where esuEligibility== 'Eligible'\r\n| extend licenseAssignmentState = properties.licenseProfile.esuProfile.licenseAssignmentState\r\n| extend serverType = properties.licenseProfile.esuProfile.serverType\r\n| extend osSku = properties.osSku\r\n| extend CoreCount = toint (properties.detectedProperties.logicalCoreCount)\r\n| project name, CoreCount, osSku, serverType, licenseAssignmentState",
+                  "isOptional": true
+                },
+                {
+                  "name": "chartType",
+                  "isOptional": true
+                },
+                {
+                  "name": "formatResults",
+                  "isOptional": true
+                },
+                {
+                  "name": "queryScope",
+                  "isOptional": true
+                },
+                {
+                  "name": "isShared",
+                  "isOptional": true
+                },
+                {
+                  "name": "queryId",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/ArgQueryGridTile",
+              "settings": {}
+            }
+          },
+          "2": {
+            "position": {
+              "x": 0,
+              "y": 5,
+              "colSpan": 8,
+              "rowSpan": 6
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "partTitle",
+                  "value": "Count Operating Systems Arc",
+                  "isOptional": true
+                },
+                {
+                  "name": "query",
+                  "value": " resources\r\n| where type == \"microsoft.hybridcompute/machines\"\r\n| extend osSku = properties.osSku\r\n| project name, osSku\r\n| summarize count() by tostring(osSku)",
+                  "isOptional": true
+                },
+                {
+                  "name": "chartType",
+                  "value": 2,
+                  "isOptional": true
+                },
+                {
+                  "name": "formatResults",
+                  "isOptional": true
+                },
+                {
+                  "name": "queryScope",
+                  "isOptional": true
+                },
+                {
+                  "name": "isShared",
+                  "isOptional": true
+                },
+                {
+                  "name": "queryId",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/ArgQueryChartTile",
+              "settings": {}
+            }
+          },
+          "3": {
+            "position": {
+              "x": 8,
+              "y": 5,
+              "colSpan": 8,
+              "rowSpan": 6
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "partTitle",
+                  "value": "Arc-Agent-Version",
+                  "isOptional": true
+                },
+                {
+                  "name": "query",
+                  "value": " resources\r\n| where type == \"microsoft.hybridcompute/machines\"\r\n| summarize count() by tostring(properties.agentVersion)",
+                  "isOptional": true
+                },
+                {
+                  "name": "chartType",
+                  "value": 1,
+                  "isOptional": true
+                },
+                {
+                  "name": "formatResults",
+                  "isOptional": true
+                },
+                {
+                  "name": "queryScope",
+                  "isOptional": true
+                },
+                {
+                  "name": "isShared",
+                  "isOptional": true
+                },
+                {
+                  "name": "queryId",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/ArgQueryChartTile",
+              "settings": {},
+              "partHeader": {
+                "title": "Azure Arc Agent Version Count",
+                "subtitle": ""
+              }
+            }
+          }
+        }
+      }
+    },
+    "metadata": {
+      "model": {
+        "timeRange": {
+          "value": {
+            "relative": {
+              "duration": 24,
+              "timeUnit": 1
+            }
+          },
+          "type": "MsPortalFx.Composition.Configuration.ValueTypes.TimeRange"
+        }
+      }
+    }
+  },
+  "name": "Azure Arc - Windows/Linux Overview",
+  "type": "Microsoft.Portal/dashboards",
+  "location": "INSERT LOCATION",
+  "tags": {
+    "hidden-title": "Azure Arc - Windows/Linux"
+  },
+  "apiVersion": "2015-08-01-preview"
+}
