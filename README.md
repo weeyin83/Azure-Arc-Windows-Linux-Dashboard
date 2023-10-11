@@ -6,6 +6,8 @@ This dashboard has been created to enable you to view several elements of the Wi
 * A view of what Arc agent version is installed
 * Current Windows ESU assignment status
 
+![arc-dashboard-example](https://github.com/weeyin83/Azure-Arc-Windows-Linux-Dashboard/assets/13692824/917cab22-455b-4c6f-a3e6-3bd32d54e021)
+
 
 # How to Enable Azure Dashboard for Arc Windows/Linux
 This article will show you how to use the [SQL Server Instances.json] file to create a custom dashboard in the [Azure portal](https://learn.microsoft.com/azure/azure-portal/azure-portal-dashboards).
