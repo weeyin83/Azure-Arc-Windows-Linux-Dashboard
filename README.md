@@ -1,5 +1,11 @@
 # Azure Arc Windows/Linux Dashboard
 
+This dashboard has been created to enable you to view several elements of the Windows or Linux servers you have deployed the Azure Arc agent to in one simple view.   Within this dashboard you will be able to see: 
+* The Windows/Linux servers that have the Arc agent installed
+* A count of what operating systems are being used by these Arc enabled servers
+* A view of what Arc agent version is installed
+* Current Windows ESU assignment status
+
 
 # How to Enable Azure Dashboard for Arc Windows/Linux
 This article will show you how to use the [SQL Server Instances.json] file to create a custom dashboard in the [Azure portal](https://learn.microsoft.com/azure/azure-portal/azure-portal-dashboards).
