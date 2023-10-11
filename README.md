@@ -10,7 +10,7 @@ This dashboard has been created to enable you to view several elements of the Wi
 
 
 # How to Enable Azure Dashboard for Arc Windows/Linux
-This article will show you how to use the [SQL Server Instances.json] file to create a custom dashboard in the [Azure portal](https://learn.microsoft.com/azure/azure-portal/azure-portal-dashboards).
+This article will show you how to use the [Azure-Arc-Windows-Linux-Dashboard.json](Azure-Arc-Windows-Linux-Dashboard.json) file to create a custom dashboard in the [Azure portal](https://learn.microsoft.com/azure/azure-portal/azure-portal-dashboards).
 
 
 
@@ -22,7 +22,7 @@ This article will show you how to use the [SQL Server Instances.json] file to cr
 3. Click on **Create**
 4. Select **Custom** Dashboard
 5. You will be prompted to customise the new dashboard, click on **cancel**
-6. Now select **Upload** and upload the [.json] file
+6. Now select **Upload** and upload the [Azure-Arc-Windows-Linux-Dashboard.json](Azure-Arc-Windows-Linux-Dashboard.json) file
 7. If you want to edit the dashboard, please refer to this [link](https://learn.microsoft.com/en-us/azure/azure-portal/azure-portal-dashboards#edit-a-dashboard).
 
 <a name=disclaimers></a>
