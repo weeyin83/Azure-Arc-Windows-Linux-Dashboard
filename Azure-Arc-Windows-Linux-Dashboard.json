@@ -19,11 +19,6 @@
                   "isOptional": true
                 },
                 {
-                  "name": "query",
-                  "value": " resources\r\n| where type == \"microsoft.hybridcompute/machines\"\r\n| extend agentversion = properties.agentVersion\r\n| project name, agentversion, location, resourceGroup, subscriptionId\r\n| order by name",
-                  "isOptional": true
-                },
-                {
                   "name": "chartType",
                   "isOptional": true
                 },
@@ -47,10 +42,19 @@
                 {
                   "name": "queryId",
                   "isOptional": true
+                },
+                {
+                  "name": "query",
+                  "value": " resources\r\n| where type == \"microsoft.hybridcompute/machines\"\r\n| extend agentversion = properties.agentVersion\r\n| extend state = properties.status\r\n| extend status = case(\r\n    state =~ 'Connected', 'Connected',\r\n    state =~ 'Disconnected', 'Offline',\r\n    state =~ 'Error', 'Error',\r\n    state =~ 'Expired', 'Expired',\r\n    '')\r\n| project name, agentversion, status, location, resourceGroup, subscriptionId\r\n| order by name",
+                  "isOptional": true
                 }
               ],
               "type": "Extension/HubsExtension/PartType/ArgQueryGridTile",
-              "settings": {}
+              "settings": {},
+              "partHeader": {
+                "title": "Azure Arc Overview",
+                "subtitle": "Overview of the Arc agents installed and current status."
+              }
             }
           },
           "1": {
@@ -94,7 +98,11 @@
                 }
               ],
               "type": "Extension/HubsExtension/PartType/ArgQueryGridTile",
-              "settings": {}
+              "settings": {},
+              "partHeader": {
+                "title": "Windows ESU Assignment Status",
+                "subtitle": "Overview of current Windows server and their ESU assignment status."
+              }
             }
           },
           "2": {
@@ -139,12 +147,70 @@
                 }
               ],
               "type": "Extension/HubsExtension/PartType/ArgQueryChartTile",
-              "settings": {}
+              "settings": {},
+              "partHeader": {
+                "title": "Operating System Count",
+                "subtitle": "A count of the operating systems with an Arc agent installed."
+              }
             }
           },
           "3": {
             "position": {
               "x": 8,
+              "y": 5,
+              "colSpan": 6,
+              "rowSpan": 6
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "partTitle",
+                  "value": "SQL Server Version Count",
+                  "isOptional": true
+                },
+                {
+                  "name": "query",
+                  "value": "// Run query to see results.\r\nresources\r\n| where type == 'microsoft.azurearcdata/sqlserverinstances'\r\n| extend status = properties.status\r\n| extend sqlversion = properties.version\r\n| project name, sqlversion\r\n| summarize count() by tostring(sqlversion)",
+                  "isOptional": true
+                },
+                {
+                  "name": "chartType",
+                  "value": 2,
+                  "isOptional": true
+                },
+                {
+                  "name": "isShared",
+                  "isOptional": true
+                },
+                {
+                  "name": "queryId",
+                  "value": "",
+                  "isOptional": true
+                },
+                {
+                  "name": "formatResults",
+                  "isOptional": true
+                },
+                {
+                  "name": "queryScope",
+                  "value": {
+                    "scope": 0,
+                    "values": []
+                  },
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/ArgQueryChartTile",
+              "settings": {},
+              "partHeader": {
+                "title": "SQL Server Version Count",
+                "subtitle": "A count of the SQL version versions detected on servers with an Arc agent installed."
+              }
+            }
+          },
+          "4": {
+            "position": {
+              "x": 14,
               "y": 5,
               "colSpan": 8,
               "rowSpan": 6
@@ -187,7 +253,7 @@
               "settings": {},
               "partHeader": {
                 "title": "Azure Arc Agent Version Count",
-                "subtitle": ""
+                "subtitle": "A view and count of the Arc agent versions currently installed."
               }
             }
           }
@@ -208,7 +274,7 @@
       }
     }
   },
-  "name": "Azure Arc - Windows/Linux Overview",
+  "name": "Azure Arc - Windows/Linux",
   "type": "Microsoft.Portal/dashboards",
   "location": "INSERT LOCATION",
   "tags": {

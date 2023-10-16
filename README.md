@@ -4,6 +4,7 @@ This dashboard has been created to enable you to view several elements of the Wi
 * The Windows/Linux servers that have the Arc agent installed
 * A count of what operating systems are being used by these Arc enabled servers
 * A view of what Arc agent version is installed
+* A count of any SQL instances that have been detected on the servers with Arc agents installed
 * Current Windows ESU assignment status
 
 ![arc-dashboard-example](https://github.com/weeyin83/Azure-Arc-Windows-Linux-Dashboard/assets/13692824/917cab22-455b-4c6f-a3e6-3bd32d54e021)
