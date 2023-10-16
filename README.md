@@ -9,6 +9,8 @@ This dashboard has been created to enable you to view several elements of the Wi
 
 ![arc-dashboard-example](./img/arc-dashboard.jpg)
 
+If you'd like to see what [Azure Resource Graph](https://learn.microsoft.com/azure/governance/resource-graph/overview) queries are used to create this dashboard, you can check out the documentation [here](./queries/readme.md). 
+
 
 # How to Enable Azure Dashboard for Arc Windows/Linux
 This article will show you how to use the [Azure-Arc-Windows-Linux-Dashboard.json](Azure-Arc-Windows-Linux-Dashboard.json) file to create a custom dashboard in the [Azure portal](https://learn.microsoft.com/azure/azure-portal/azure-portal-dashboards).
