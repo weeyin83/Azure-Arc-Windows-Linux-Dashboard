@@ -7,7 +7,7 @@ This dashboard has been created to enable you to view several elements of the Wi
 * A count of any SQL instances that have been detected on the servers with Arc agents installed
 * Current Windows ESU assignment status
 
-![arc-dashboard-example](https://github.com/weeyin83/Azure-Arc-Windows-Linux-Dashboard/assets/13692824/917cab22-455b-4c6f-a3e6-3bd32d54e021)
+![arc-dashboard-example](./img/arc-dashboard.jpg)
 
 
 # How to Enable Azure Dashboard for Arc Windows/Linux
