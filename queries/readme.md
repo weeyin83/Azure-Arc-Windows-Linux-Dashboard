@@ -9,6 +9,7 @@ The dashboard is built using queries from [Azure Resource Graph](https://learn.m
 - [Count Operating Systems](#count-operating-systems)
 - [SQL Server version count](#sql-server-version-count)
 - [Azure Arc Agent version](#azure-arc-agent-version)
+- [Azure Arc Extension Overview](#azure-arc-extension-overview)
 
 
 ### Azure Arc Overview
@@ -87,4 +88,67 @@ This query uses the information behind the resource type "microsoft.azurearcdata
  resources
 | where type == "microsoft.hybridcompute/machines"
 | summarize count() by tostring(properties.agentVersion)
+```
+
+### Azure Arc Extension Overview
+
+This query pulls out the information relating to the [Azure Arc agent extension status](https://learn.microsoft.com/azure/azure-arc/servers/manage-vm-extensions).  It will show if extensions are allowed on a certain agent.  It will also should the status of certain extensions individually.  So you will see the status of:
+* Microsoft Defender extension
+* Azure Monitor agent extension
+* Windows Admin Center extension
+* Azure Update Manager extension
+
+```
+bash
+resources
+| where type =~ 'microsoft.hybridcompute/machines' and kind !contains "AVS"
+| extend machineId = tolower(tostring(id))
+| extend hostId = tolower(id)
+| join kind=leftouter (
+    connectedVMwarevSphereResources
+    | where type =~ 'microsoft.connectedvmwarevsphere/virtualmachineinstances'
+    | extend guestId = tolower(id)
+    | extend indexOfHostId = indexof(guestId, tolower("/providers/Microsoft.ConnectedVMwarevSphere/VirtualMachineInstances/default"))
+    | extend hostId = substring(guestId, 0, indexOfHostId)
+    | extend guestProperties = properties
+    | extend guestExtendedLocation = extendedLocation
+    | extend vCenterId = properties.infrastructureProfile.vCenterId
+    | project hostId, guestId, guestProperties, guestExtendedLocation, vCenterId
+) on $left.hostId == $right.hostId
+| extend datacenter = iif(isnull(tags.Datacenter), '', tags.Datacenter)
+| extend state = properties.status
+| extend status = case(
+    state =~ 'Connected', 'Connected',
+    state =~ 'Disconnected', 'Offline',
+    state =~ 'Error', 'Error',
+    state =~ 'Expired', 'Expired',
+    '')
+| extend osSku = properties.osSku
+| extend os = properties.osName
+| extend osName = case(
+    os =~ 'windows', 'Windows',
+    os =~ 'linux', 'Linux',
+    '')
+| extend extensionsEnabled = tostring(properties.agentConfiguration.extensionsEnabled)
+| extend operatingSystem = iif(isnotnull(osSku), osSku, osName)
+| join kind=leftouter (
+    resources
+    | where type =~ "microsoft.hybridcompute/machines/extensions"
+    | extend machineId = tolower(tostring(trim_end(@"\/\w+\/(\w|\.)+", id)))
+    | extend provisioned = tolower(tostring(properties.provisioningState)) == "succeeded"
+    | summarize
+        MDEcnt = countif(properties.type in ("MDE.Linux", "MDE.Windows") and provisioned),
+        AMAcnt = countif(properties.type in ("AzureMonitorWindowsAgent", "AzureMonitorLinuxAgent") and provisioned),
+        WACcnt = countif(properties.type in ("AdminCenter") and provisioned),
+        UMcnt = countif(properties.type in ("WindowsOsUpdateExtension","LinuxOsUpdateExtension", "WindowsPatchExtension") and provisioned) by machineId
+) on machineId
+| extend defenderStatus = iff ((MDEcnt>0), 'Enabled', 'Not enabled')
+| extend monitoringAgent = iff ((AMAcnt>0), 'Installed','Not installed')
+| extend wacStatus = iff ((WACcnt>0), 'Enabled', 'Not enabled')
+| extend updateManagement = iff ((UMcnt>0), 'Enabled', 'Not enabled')
+| extend hostName = tostring(properties.displayName)
+| extend hostEnvironment = vCenterId
+| extend name = iif(properties.cloudMetadata.provider == 'AWS' and name != hostName, strcat(name, "(", hostName, ")"), name)
+| project name, status, resourceGroup, operatingSystem, extensionsEnabled, defenderStatus, monitoringAgent, wacStatus, updateManagement
+
 ```

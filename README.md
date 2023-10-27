@@ -6,6 +6,7 @@ This dashboard has been created to enable you to view several elements of the Wi
 * A view of what Arc agent version is installed
 * A count of any SQL instances that have been detected on the servers with Arc agents installed
 * Current Windows ESU assignment status
+* An overview of whether the Azure Arc is allowed to enable [extensions](https://learn.microsoft.com/azure/azure-arc/servers/manage-vm-extensions) or not.  And the status of some of the extensions if they are allowed to be used. 
 
 ![arc-dashboard-example](./img/arc-dashboard.jpg)
 
