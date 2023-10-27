@@ -98,8 +98,7 @@ This query pulls out the information relating to the [Azure Arc agent extension 
 * Windows Admin Center extension
 * Azure Update Manager extension
 
-```
-bash
+```bash
 resources
 | where type =~ 'microsoft.hybridcompute/machines' and kind !contains "AVS"
 | extend machineId = tolower(tostring(id))
