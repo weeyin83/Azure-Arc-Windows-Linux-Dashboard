@@ -256,6 +256,59 @@
                 "subtitle": "A view and count of the Arc agent versions currently installed."
               }
             }
+          },
+          "5": {
+            "position": {
+              "x": 0,
+              "y": 11,
+              "colSpan": 22,
+              "rowSpan": 6
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "partTitle",
+                  "value": "Query 1",
+                  "isOptional": true
+                },
+                {
+                  "name": "query",
+                  "value": "// Run query to see results.\r\nresources\r\n| where type =~ 'microsoft.hybridcompute/machines' and kind !contains \"AVS\"\r\n| extend machineId = tolower(tostring(id))\r\n| extend hostId = tolower(id)\r\n| join kind=leftouter (\r\n    connectedVMwarevSphereResources\r\n    | where type =~ 'microsoft.connectedvmwarevsphere/virtualmachineinstances'\r\n    | extend guestId = tolower(id)\r\n    | extend indexOfHostId = indexof(guestId, tolower(\"/providers/Microsoft.ConnectedVMwarevSphere/VirtualMachineInstances/default\"))\r\n    | extend hostId = substring(guestId, 0, indexOfHostId)\r\n    | extend guestProperties = properties\r\n    | extend guestExtendedLocation = extendedLocation\r\n    | extend vCenterId = properties.infrastructureProfile.vCenterId\r\n    | project hostId, guestId, guestProperties, guestExtendedLocation, vCenterId\r\n) on $left.hostId == $right.hostId\r\n| extend datacenter = iif(isnull(tags.Datacenter), '', tags.Datacenter)\r\n| extend state = properties.status\r\n| extend status = case(\r\n    state =~ 'Connected', 'Connected',\r\n    state =~ 'Disconnected', 'Offline',\r\n    state =~ 'Error', 'Error',\r\n    state =~ 'Expired', 'Expired',\r\n    '')\r\n| extend osSku = properties.osSku\r\n| extend os = properties.osName\r\n| extend osName = case(\r\n    os =~ 'windows', 'Windows',\r\n    os =~ 'linux', 'Linux',\r\n    '')\r\n| extend extensionsEnabled = tostring(properties.agentConfiguration.extensionsEnabled)\r\n| extend operatingSystem = iif(isnotnull(osSku), osSku, osName)\r\n| join kind=leftouter (\r\n    resources\r\n    | where type =~ \"microsoft.hybridcompute/machines/extensions\"\r\n    | extend machineId = tolower(tostring(trim_end(@\"\\/\\w+\\/(\\w|\\.)+\", id)))\r\n    | extend provisioned = tolower(tostring(properties.provisioningState)) == \"succeeded\"\r\n    | summarize\r\n        MDEcnt = countif(properties.type in (\"MDE.Linux\", \"MDE.Windows\") and provisioned),\r\n        AMAcnt = countif(properties.type in (\"AzureMonitorWindowsAgent\", \"AzureMonitorLinuxAgent\") and provisioned),\r\n        WACcnt = countif(properties.type in (\"AdminCenter\") and provisioned),\r\n        UMcnt = countif(properties.type in (\"WindowsOsUpdateExtension\",\"LinuxOsUpdateExtension\", \"WindowsPatchExtension\") and provisioned) by machineId\r\n) on machineId\r\n| extend defenderStatus = iff ((MDEcnt>0), 'Enabled', 'Not enabled')\r\n| extend monitoringAgent = iff ((AMAcnt>0), 'Installed','Not installed')\r\n| extend wacStatus = iff ((WACcnt>0), 'Enabled', 'Not enabled')\r\n| extend updateManagement = iff ((UMcnt>0), 'Enabled', 'Not enabled')\r\n| extend hostName = tostring(properties.displayName)\r\n| extend hostEnvironment = vCenterId\r\n| extend name = iif(properties.cloudMetadata.provider == 'AWS' and name != hostName, strcat(name, \"(\", hostName, \")\"), name)\r\n| project name, status, resourceGroup, operatingSystem, extensionsEnabled, defenderStatus, monitoringAgent, wacStatus, updateManagement\r\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "chartType",
+                  "isOptional": true
+                },
+                {
+                  "name": "isShared",
+                  "isOptional": true
+                },
+                {
+                  "name": "queryId",
+                  "value": "",
+                  "isOptional": true
+                },
+                {
+                  "name": "formatResults",
+                  "isOptional": true
+                },
+                {
+                  "name": "queryScope",
+                  "value": {
+                    "scope": 0,
+                    "values": []
+                  },
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/ArgQueryGridTile",
+              "settings": {},
+              "partHeader": {
+                "title": "Azure Arc Extension Status",
+                "subtitle": "Overview if extensions are allowed to be deployed to Azure Arc agents and if they are enabled/installed."
+              }
+            }
           }
         }
       }
