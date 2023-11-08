@@ -8,7 +8,8 @@ This dashboard has been created to enable you to view several elements of the Wi
 * Current Windows ESU assignment status
 * An overview of whether the Azure Arc is allowed to enable [extensions](https://learn.microsoft.com/azure/azure-arc/servers/manage-vm-extensions) or not.  And the status of some of the extensions if they are allowed to be used. 
 
-![arc-dashboard-example](./img/arc-dashboard.jpg)
+<img width="1015" alt="arcdashboard" src="https://github.com/weeyin83/Azure-Arc-Windows-Linux-Dashboard/assets/13692824/f5542a64-0810-47ad-a4a8-788ff360c952">
+
 
 If you'd like to see what [Azure Resource Graph](https://learn.microsoft.com/azure/governance/resource-graph/overview) queries are used to create this dashboard, you can check out the documentation [here](./queries/readme.md). 
 
