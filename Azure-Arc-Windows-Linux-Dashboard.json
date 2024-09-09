@@ -1,10 +1,10 @@
 {
   "properties": {
-    "lenses": {
-      "0": {
+    "lenses": [
+      {
         "order": 0,
-        "parts": {
-          "0": {
+        "parts": [
+          {
             "position": {
               "x": 0,
               "y": 0,
@@ -57,7 +57,7 @@
               }
             }
           },
-          "1": {
+          {
             "position": {
               "x": 11,
               "y": 0,
@@ -105,7 +105,7 @@
               }
             }
           },
-          "2": {
+          {
             "position": {
               "x": 0,
               "y": 5,
@@ -154,7 +154,7 @@
               }
             }
           },
-          "3": {
+          {
             "position": {
               "x": 8,
               "y": 5,
@@ -208,7 +208,7 @@
               }
             }
           },
-          "4": {
+          {
             "position": {
               "x": 14,
               "y": 5,
@@ -257,7 +257,7 @@
               }
             }
           },
-          "5": {
+          {
             "position": {
               "x": 0,
               "y": 11,
@@ -310,9 +310,9 @@
               }
             }
           }
-        }
+        ]
       }
-    },
+    ],
     "metadata": {
       "model": {
         "timeRange": {
@@ -333,5 +333,5 @@
   "tags": {
     "hidden-title": "Azure Arc - Windows/Linux"
   },
-  "apiVersion": "2015-08-01-preview"
+  "apiVersion": "2022-12-01-preview"
 }
