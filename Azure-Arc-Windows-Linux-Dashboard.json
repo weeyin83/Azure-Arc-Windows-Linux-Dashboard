@@ -45,7 +45,7 @@
                 },
                 {
                   "name": "query",
-                  "value": " resources\r\n| where type == \"microsoft.hybridcompute/machines\"\r\n| extend agentversion = properties.agentVersion\r\n| extend state = properties.status\r\n| extend status = case(\r\n    state =~ 'Connected', 'Connected',\r\n    state =~ 'Disconnected', 'Offline',\r\n    state =~ 'Error', 'Error',\r\n    state =~ 'Expired', 'Expired',\r\n    '')\r\n| project name, agentversion, status, location, resourceGroup, subscriptionId\r\n| order by name",
+                  "value": "resources\r\n| where type =~ \"microsoft.hybridcompute/machines\"\r\n| extend PropertiesObject = parse_json(properties)\r\n| extend agentUpgradeObj = parse_json(PropertiesObject.agentUpgrade)\r\n| extend enableAutomaticUpgrade = tostring(agentUpgradeObj.enableAutomaticUpgrade)\r\n| extend agentVersion = properties.agentVersion\r\n| extend state = properties.status\r\n| extend status = case(\r\n    state =~ 'Connected', 'Connected',\r\n    state =~ 'Disconnected', 'Offline',\r\n    state =~ 'Error', 'Error',\r\n    state =~ 'Expired', 'Expired',\r\n    '')\r\n| project name, agentVersion, status, enableAutomaticUpgrade, location, resourceGroup, subscriptionId\r\n| order by name",
                   "isOptional": true
                 }
               ],
