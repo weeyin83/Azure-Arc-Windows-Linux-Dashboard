@@ -9,6 +9,7 @@ The dashboard is built using queries from [Azure Resource Graph](https://learn.m
 - [Count Operating Systems](#count-operating-systems)
 - [SQL Server version count](#sql-server-version-count)
 - [Azure Arc Agent version](#azure-arc-agent-version)
+- [Azure Arc-enabled server hardware and operating system inventory](#azure-arc-enabled-server-hardware-and-operating-system-inventory)
 - [Azure Arc Extension Overview](#azure-arc-extension-overview)
 
 
@@ -88,6 +89,42 @@ This query uses the information behind the resource type "microsoft.azurearcdata
  resources
 | where type == "microsoft.hybridcompute/machines"
 | summarize count() by tostring(properties.agentVersion)
+```
+
+### Azure Arc-enabled server hardware and operating system inventory
+
+This query looks for servers that have the Azure Arc Connected Machine agent installed. It displays hardware and operating-system information for each server, including the manufacturer, model, processor, physical core count, total memory, and detailed Windows Server edition and version.
+
+You can use this query to build an inventory of your Azure Arc-enabled servers, assess their hardware capacity, and identify machines running operating systems such as Windows Server 2016 or Windows Server 2022.
+
+The query uses information from the microsoft.hybridcompute/machines resource type. Some of the hardware information is nested inside the properties.detectedProperties JSON object, so the query uses extend and project to retrieve and format those values. It also converts physical memory from bytes to gigabytes and combines the operating-system SKU and version into a single readable column.
+
+```bash
+Resources
+| where type =~ 'microsoft.hybridcompute/machines'
+| extend
+    coreCount = toint(properties.detectedProperties.coreCount),
+    totalPhysicalMemoryGB = round(
+        todouble(properties.detectedProperties.totalPhysicalMemoryInBytes)
+        / 1073741824,
+        2
+    ),
+    operatingSystem = strcat(
+        tostring(properties.osSku),
+        ' (',
+        tostring(properties.osVersion),
+        ')'
+    )
+| project
+    name,
+    resourceGroup,
+    manufacturer = tostring(properties.detectedProperties.manufacturer),
+    model = tostring(properties.detectedProperties.model),
+    processorNames = tostring(properties.detectedProperties.processorNames),
+    coreCount,
+    totalPhysicalMemoryGB,
+    operatingSystem
+| order by name asc
 ```
 
 ### Azure Arc Extension Overview
