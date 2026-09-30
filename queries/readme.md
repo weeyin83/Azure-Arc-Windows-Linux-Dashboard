@@ -9,7 +9,7 @@ The dashboard is built using queries from [Azure Resource Graph](https://learn.m
 - [Count Operating Systems](#count-operating-systems)
 - [SQL Server version count](#sql-server-version-count)
 - [Azure Arc Agent version](#azure-arc-agent-version)
-- [Azure Arc-enabled server hardware and operating system inventory](Azure Arc-enabled server hardware and operating system inventory)
+- [Azure Arc-enabled server hardware and operating system inventory](#azure-arc-enabled-server-hardware-and-operating-system-inventory)
 - [Azure Arc Extension Overview](#azure-arc-extension-overview)
 
 
